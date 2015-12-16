@@ -20,13 +20,13 @@ class R(float):
 
     @staticmethod
     def mult_id():
-        return 1.0
+        return 1
 
     @staticmethod
     def add_id():
-        return 0.0
+        return 0
 
-# The parent class of all finite fields
+# The parent class of all finite fields. Uses logarithm tables only for speed
 class FiniteField(Field):
 
     # The characteristic
@@ -38,18 +38,48 @@ class FiniteField(Field):
     # The generator of the logarithm table
     primitive = None
 
-    # The logarithm table of the field
+    # The logarithm table of the field. Access with method instead
     log_table = None
+    log_table_reverse = None # Matches field members to generator orders
 
-    def __init__(self):
-        super(Field, self).__init__()
+    # The irreducible polynomial of the field. Must have leading coefficient of 1
+    irreducible_poly = None
+
+    # Define a polynomial multiplier that does it the hard way
+    @staticmethod
+    def poly_mult(p1, p2):
+
+        # Init the new polynomial
+        order1 = len(p1) - 1
+        order2 = len(p2) - 1
+        new_order = order1 + order2
+
+        # Carry out normal polynomial multiplication
+        result = [0 for i in xrange(new_order + 1)]
+        for power1, coef1 in enumerate(p1):
+            for power2, coef2 in enumerate(p2):
+                new_power = power1 + power2
+                new_coef = (coef1 * coef2) % characteristic
+                result[new_power] += new_coef
+
+        # Reduce by the polynomial
+        irreducible_poly_order = len(irreducible_poly) - 1
+        if new_order > irreducible_poly_order:
+            raise ValueError("Poly mult is not meant for this!")
+
+        x_to_order_equiv_neg = irreducible_poly[:-1]
+        factor = -result[-1]
+        for power in xrange(len(x_to_order_equiv_neg)):
+            result[power] += (x_to_order_equiv_neg[power] * factor)
+
+        return result
 
     # Gets the size of the field
     @staticmethod  
     def size():
         return char ** r
 
-    # Gets all elements of the field (as an iterable)
+    # Gets all elements of the field (as an iterable). Returns in order of primitive powers
     @staticmethod
     def all_values():
 
@@ -68,83 +98,154 @@ class FiniteField(Field):
         while iteration < size_f_mult:
 
             value = value * primitive
+            if value == mult_id:
+                raise ValueError("Invalid primitive element")
             yield value
             iteration += 1
 
-
-# Define a member of F4
-class F4(object):
-    def __init__(self, string="0"):
-        super(F4, self).__init__()
-        
-        c = 0
-        x = 0
-
-        if string == "1":
-            c = 1
-        elif string == "x":
-            x = 1
-        elif string == "x + 1" or string == "x+1":
-            x = 1
-            c = 1
-
-        self.c_term = c
-        self.x_term = x
-
-    # Gets all elements of the field
+    # Gets the logarithm table for the finite field
     @staticmethod
-    def all_values():
-        return {F4("0"), F4("1"), F4("x"), F4("x + 1")}
+    def get_log_table():
 
-    # Gets the identities
+        # Lazily compute the logarithm table
+        if log_table == None:
+
+            log_table = []
+            log_table_reverse = {}
+
+            power = 0
+
+            for value in all_values():
+
+                # The additive identity is not included in the log table
+                if value == add_id: continue
+                log_table.append(value)
+                log_table_reverse[value] = power
+                power += 1
+
+        return log_table
+
+    # Maps field members to primitive order
     @staticmethod
-    def mult_id():
-        return F4("1")
+    def get_log_table_reverse():
+        get_log_table()
+        return log_table_reverse
 
-    @staticmethod
-    def add_id():
-        return F4("0")
+    # Create a polynomial from a string
+    def __init__(self, string):
+        super(FiniteField, self).__init__()
 
-    # Add two elements of the field
-    def __add__(self, other):
+        # Compute the log table if haven't already
+        get_log_table()
 
-        result = F4()
+        # Store polynomial coefficients (of instances)
+        self.coefficients = []
 
-        result.c_term = (self.c_term + other.c_term) % 2
-        result.x_term = (self.x_term + other.x_term) % 2
+        compact = string.replace(" ", "")
 
-        return result
+        # Handle zero
+        if compact != "0":
+            self.coefficients.append(0)
 
-    # Multiplication
-    def __mul__(self, other):
-
-        result = F4()
-
-        # Calculate x^2 term = x + 1
-        extra_x = extra_c = self.x_term * other.x_term
-
-        # Calculate x term
-        result.x_term = (self.x_term * other.c_term + self.c_term * other.x_term + extra_x) % 2
-
-        # Calculate constant term
-        result.c_term = (self.c_term * other.c_term + extra_c) % 2
-
-        return result
-
-    def __eq__(self, other):
-        if isinstance(other, self.__class__):
-            return self.c_term == other.c_term and self.x_term == other.x_term
+        # Parse terms
         else:
-            return False
+            terms = text.split("+")
+            degree = -1
+            for term in list(reversed(terms)):
 
+                coef = None
+                power = None
+
+                # Attempt to split cleanly into coef and power
+                coef_power = "x^".split(term)
+                if (len(coef_power > 1)):
+                    coef = int(coef_power[0])
+                    power = int(coef_power[1])
+
+                else:
+                    x_index = term.find("x")
+
+                    if (x_index == -1):
+
+                        # We simply have a constant
+                        coef = int(term)
+                        power = 0
+
+                    else:
+
+                        # We only have a power
+                        coef = 1
+                        power = 1 if term.find("^") == -1 else int(term[2:])
+
+                if coef == None or power == None:
+                    raise ValueError("Could not parse input polynomial")
+
+                # Add the term, first doing some padding with 0 coefficients if necessary
+                while degree < power - 1:
+                    self.coefficients.append(0)
+                self.coef_power.append(coef)
+
+    # Adds two field members together
+    def __add__(self, other):
+        result = copy.deepcopy(self)
+
+        for power, coef in enumerate(other.coefficients):
+            result[power] = (result[power] + coef) % characteristic
+
+        return result
+
+    # Hashes a field member
     def __hash__(self):
-        return self.x_term * 2 + self.c_term
+        val = 0
+        for power, coef in enumerate(self.coefficients):
+            val += (characteristic ** power) * coef
+        return val
 
+    # Multiplies two field members together
+    def __mul__(self, other):
+        
+        prim_power_self = log_table_reverse[self]
+        prim_power_other = log_table_reverse[other]
+        prim_power_result = (prim_power_self + prim_power_other) % size()
+        return log_table[prim_power_result]
+
+    # Write the polynomial as a string
     def __unicode__(self):
 
-        if self.x_term == 1 and self.c_term == 1: return "x + 1"
-        if self.x_term == 1 and self.c_term == 0: return "x"
-        return str(self.c_term)
+        written_terms = []
+
+        # Traverse coefficients in reverse order as we write them
+        for power, coef in reversed(list(enumerate(self.coefficients))):
+
+            # Add term to written terms
+            if coef != 0:
+
+                term = ""
+
+                # Add the coefficient if necessary
+                if coef != 1 or power == 0: term += str(coef)
+
+                # Add the x if necessary
+                if power != 0:
+                    term += "x"
+
+                # Add the power if necessary
+                if power > 1:
+                    term += "^" + str(power)
+
+                written_terms.append(term)
+
+        # No terms means zero
+        if not terms: return "0"
+
+        return " + ".join(terms)
 
     def __repr__(self):
-        return "F4(" + self.__unicode__() + ")"
+        return self.__class__.__name__ + "(" + self.__unicode__() + ")"
+
+
+
+
+# Define F4
+
+field_tests:
