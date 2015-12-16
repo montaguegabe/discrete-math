@@ -154,7 +154,7 @@ while True:
     print "m corresponds to permutation:", unicode(matrix_to_permutation(a, lines))
     print "0 is the lowest symbol. These lines are being used:"
     for symbol, line in enumerate(lines):
-        print symbol + ":", line
+        print str(symbol) + ":", line
     print ""
 
 print "EXPLORATORY PROBLEMS 3: #12 - MATRIX ISOMORPHISMS (Demonstrate isomorphism)"
