@@ -111,7 +111,7 @@ class FiniteField(Field):
             new_value.coefficients = cls.poly_mult(value.coefficients, cls.primitive)
             value = new_value
 
-            if value == cls.mult_id:
+            if value == cls.mult_id():
                 raise ValueError("Invalid primitive element")
             yield value
             iteration += 1
@@ -132,20 +132,22 @@ class FiniteField(Field):
             for value in cls.all_values():
 
                 # The additive identity is not included in the log table
-                if value == cls.add_id(): continue
+                if value == cls.add_id():
+                    continue
                 log_table.append(value)
                 log_table_reverse[value] = power
                 power += 1
 
             cls.log_table = log_table
+            cls.log_table_reverse = log_table_reverse
 
         return cls.log_table
 
     # Maps field members to primitive order
     @classmethod
     def get_log_table_reverse(cls):
-        self.get_log_table()
-        return log_table_reverse
+        cls.get_log_table()
+        return cls.log_table_reverse
 
     # Create a polynomial from a string
     def __init__(self, string):
@@ -226,10 +228,21 @@ class FiniteField(Field):
     # Multiplies two field members together
     def __mul__(self, other):
         
-        prim_power_self = log_table_reverse[self]
-        prim_power_other = log_table_reverse[other]
-        prim_power_result = (prim_power_self + prim_power_other) % size()
-        return log_table[prim_power_result]
+        zero = type(self).add_id()
+        if other == zero: return zero
+
+        prim_power_self = type(self).get_log_table_reverse()[self]
+        prim_power_other = type(self).get_log_table_reverse()[other]
+        prim_power_result = (prim_power_self + prim_power_other) % (type(self).size() - 1)
+
+        return type(self).log_table[prim_power_result]
+
+    # Defines equality between two fields
+    def __eq__(self, other):
+        if isinstance(other, self.__class__):
+            return self.coefficients == other.coefficients
+        else:
+            return TypeError("Cannot compare these types")
 
     # Write the polynomial as a string
     def __unicode__(self):
@@ -301,11 +314,11 @@ class F4(FiniteField):
 def field_tests():
 
     a = F4("x + 1")
-    b = F4("x")
+    b = F4("x + 1")
     print a
     print b
 
-    print F4.get_log_table()
+    print a * b
     
 
 

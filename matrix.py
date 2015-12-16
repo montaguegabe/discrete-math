@@ -138,7 +138,7 @@ class Matrix(object):
     # Equality
     def __eq__(self, other):
         if isinstance(other, self.__class__):
-            self.vector_list == other.vector_list
+            return self.vector_list == other.vector_list
         else:
             return False
 
