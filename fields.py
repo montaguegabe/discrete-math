@@ -222,10 +222,17 @@ class FiniteField(Field):
 
     # Adds two field members together
     def __add__(self, other):
-        result = copy.deepcopy(self)
+        result = type(self)("0")
+        result.coefficients = []
 
-        for power, coef in enumerate(other.coefficients):
-            result.coefficients[power] = (result.coefficients[power] + coef) % type(self).characteristic
+        self_coef_num = len(self.coefficients)
+        other_coef_num = len(other.coefficients)
+        result_coef_num = max(self_coef_num, other_coef_num)
+
+        for power in xrange(result_coef_num):
+            self_coef = self.coefficients[power] if power < self_coef_num else 0
+            other_coef = other.coefficients[power] if power < other_coef_num else 0
+            result.coefficients.append((self_coef + other_coef) % type(self).characteristic)
 
         # Trim zeros off the end
         for i in xrange(len(result.coefficients) - 1, 0, -1):
@@ -247,7 +254,7 @@ class FiniteField(Field):
     def __mul__(self, other):
         
         zero = type(self).add_id()
-        if other == zero: return zero
+        if other == zero or self == zero: return zero
 
         prim_power_self = type(self).get_log_table_reverse()[self]
         prim_power_other = type(self).get_log_table_reverse()[other]
@@ -396,6 +403,7 @@ def field_tests():
     b4 = F4("x + 1")
     assert a4 * b4 == F4("x")
     assert a4 + b4 == F4("0")
+    assert F4("0") + a4 == a4
     
     a9 = F9("x + 1")
     b9 = F9("x + 1")
@@ -444,6 +452,7 @@ def field_tests():
     b49 = F49("6x + 6")
     assert a49 * b49 == F49("2x + 6")
     assert a49 + b49 == F49("5x + 4")
+    assert F49("6x") + F49("1") == F49("6x + 1")
 
 
 field_tests()

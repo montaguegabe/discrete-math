@@ -1,15 +1,17 @@
 from permutation import *
 from matrix import *
-import fields
+from fields import *
 
 # Returns the index of the line that the vector belongs to. Also takes a list of vectors
 def which_line(vector, lines):
 
     assert lines
 
-    field = (lines[0][0]).__class__
+    field = type(lines[0][0])
 
-    all_non_zero = field.all_values()
+    all_non_zero = []
+    for member in field.all_values():
+        all_non_zero.append(member)
     all_non_zero.remove(field.add_id())
 
     for index, initial in enumerate(lines):
@@ -66,7 +68,7 @@ def isomorphism_tests():
         Vector([F4("0"), F4("1")]),
         Vector([F4("1"), F4("x")]),
         Vector([F4("1"), F4("1")]),
-        Vector([F4("1"), F4("x+1")])
+        Vector([F4("1"), F4("x + 1")])
     ]
 
     m = Matrix.from_list([[F4("1"), F4("x")], [F4("x + 1"), F4("0")]])

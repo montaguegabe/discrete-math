@@ -4,22 +4,13 @@ FIRST BATCH
 18 points: 6 points each for the first 3
 
 THIRD BATCH
-26 points: 8 points for the first 2
++ 8 points for the first 2
+26 points
 +4 for line association
 30 points
 
-(13)(32)(24)=(132)(24)=(1324)
+SECOND BATH
++15 for fields
+45 points
 
 50 total
-
-
-15
-
-
-def firstn(n):
-   3     num = 0
-   4     while num < n:
-   5         yield num
-   6         num += 1
-   7 
-   8 sum_of_first_n = sum(firstn(1000000))
