@@ -47,6 +47,15 @@ class FiniteField(Field):
     # The irreducible polynomial of the field. Must have leading coefficient of 1
     irreducible_poly = None
 
+    # Gets the identities
+    @classmethod
+    def mult_id(cls):
+        return cls("1")
+
+    @classmethod
+    def add_id(cls):
+        return cls("0")
+
     # Define a polynomial multiplier that does it the hard way
     @classmethod
     def poly_mult(cls, p1, p2):
@@ -288,46 +297,139 @@ class FiniteField(Field):
         return self.__class__.__name__ + "(" + self.__unicode__() + ")"
 
 
-# Define F4
 class F4(FiniteField):
-
-    # The characteristic
     characteristic = 2
-
-    # Number of copies of the characteristic cyclic group, max power + 1
     r = 2
-
-    # The generator of the logarithm table
-    primitive = [0, 1] # x
-
-    # The logarithm table of the field. Access with method instead
+    primitive = [0, 1]
     log_table = None
-    log_table_reverse = None # Matches field members to generator orders
-
-    # The irreducible polynomial of the field. Must have leading coefficient of 1
+    log_table_reverse = None
     irreducible_poly = [1, 1, 1]
 
-    # Gets the identities
-    @classmethod
-    def mult_id(cls):
-        return F4("1")
+class F5(FiniteField):
+    characteristic = 5
+    r = 1
+    primitive = [2]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [0, 1] # This isn't used, but must have order 1
 
-    @classmethod
-    def add_id(cls):
-        return F4("0")
+class F7(FiniteField):
+    characteristic = 7
+    r = 1
+    primitive = [3]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [0, 1] # This isn't used, but must have order 1
 
-    def __init__(self, string):
-        super(F4, self).__init__(string)
+class F8(FiniteField):
+    characteristic = 2
+    r = 3
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [1, 1, 0, 1]
+
+class F9(FiniteField):
+    characteristic = 3
+    r = 2
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [2, 2, 1]
+
+class F16(FiniteField):
+    characteristic = 2
+    r = 4
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [1, 1, 0, 0, 1]
+
+class F25(FiniteField):
+    characteristic = 5
+    r = 2
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [3, 3, 1]
+
+class F27(FiniteField):
+    characteristic = 3
+    r = 3
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [1, 2, 0, 1]
+
+class F32(FiniteField):
+    characteristic = 2
+    r = 5
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [1, 0, 1, 0, 0, 1]
+
+class F49(FiniteField):
+    characteristic = 7
+    r = 2
+    primitive = [0, 1]
+    log_table = None
+    log_table_reverse = None
+    irreducible_poly = [3, 1, 1]
         
 
 def field_tests():
 
-    a = F4("x + 1")
-    b = F4("x + 1")
-
-    assert a * b == F4("x")
-    assert a + b == F4("0")
+    a4 = F4("x + 1")
+    b4 = F4("x + 1")
+    assert a4 * b4 == F4("x")
+    assert a4 + b4 == F4("0")
     
+    a9 = F9("x + 1")
+    b9 = F9("x + 1")
+    assert a9 * b9 == F9("2")
+
+    a5 = F5("3")
+    b5 = F5("3")
+    assert a5 * b5 == F5("4")
+    assert a5 + b5 == F5("1")
+
+    a7 = F7("3")
+    b7 = F7("4")
+    assert a7 * b7 == F7("5")
+    assert a7 + b7 == F7("0")
+
+    a8 = F8("x^2 + 1")
+    b8 = F8("x")
+    assert a8 * b8 == F8("1")
+    assert a8 + b8 == F8("x^2 + x + 1")
+
+    a16 = F16("x^3 + 1")
+    b16 = F16("x + 1")
+    c16 = F16("0")
+    assert a16 * b16 == F16("x^3")
+    assert a16 * c16 == F16("0")
+
+    a25 = F25("2x + 3")
+    b25 = F25("4x + 1")
+    c25 = F25("2")
+    assert a25 * b25 == F25("4")
+    assert a25 + b25 == F25("x + 4")
+    assert b25 * b25 == F25("3")
+    assert b25 * c25 == F25("3x + 2")
+
+    a27 = F27("x^2 + 2")
+    b27 = F27("2x")
+    assert a27 * b27 == F27("1")
+
+    a32 = F32("x^3 + x^2 + 1")
+    b32 = F32("x^3 + x")
+    assert a32 * b32 == F32("x^4 + x^3 + x^2 + 1")
+
+    a49 = F49("6x + 5")
+    b49 = F49("6x + 6")
+    assert a49 * b49 == F49("2x + 6")
+    assert a49 + b49 == F49("5x + 4")
 
 
 field_tests()
