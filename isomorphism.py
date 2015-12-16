@@ -36,7 +36,9 @@ def matrix_to_permutation(matrix, lines):
     from_index = symbols_left_to_map.pop()
     while symbols_left_to_map:
 
-        if from_index in symbols_left_to_map: symbols_left_to_map.remove(from_index)
+        if from_index in symbols_left_to_map:
+            symbols_left_to_map.remove(from_index)
+            continue
 
         # See we are taken
         line_vector = lines[from_index]
@@ -63,7 +65,8 @@ def matrix_to_permutation(matrix, lines):
 
 
 def isomorphism_tests():
-    lines = [
+
+    lines_f4 = [
         Vector([F4("1"), F4("0")]),
         Vector([F4("0"), F4("1")]),
         Vector([F4("1"), F4("x")]),
@@ -71,8 +74,23 @@ def isomorphism_tests():
         Vector([F4("1"), F4("x + 1")])
     ]
 
-    m = Matrix.from_list([[F4("1"), F4("x")], [F4("x + 1"), F4("0")]])
-    matrix_permutation = matrix_to_permutation(m, lines)
+    m_f4 = Matrix.from_list([[F4("1"), F4("x")], [F4("x + 1"), F4("0")]])
+    matrix_permutation = matrix_to_permutation(m_f4, lines_f4)
     assert str(matrix_permutation) == "(041)"
+
+    lines_f5 = [
+        Vector([F5("1"), F5("0")]),
+        Vector([F5("0"), F5("1")]),
+        Vector([F5("1"), F5("1")]),
+        Vector([F5("1"), F5("2")]),
+        Vector([F5("1"), F5("3")]),
+        Vector([F5("1"), F5("4")])
+    ]
+
+    m_f5 = Matrix.from_list([[F5("1"), F5("3")], [F5("2"), F5("3")]])
+    matrix_permutation = matrix_to_permutation(m_f5, lines_f5)
+    print matrix_permutation
+
+
 
 isomorphism_tests()
