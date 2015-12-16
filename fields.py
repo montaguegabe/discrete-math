@@ -255,6 +255,18 @@ class FiniteField(Field):
 
         return type(self).log_table[prim_power_result]
 
+    # Divides two field members together
+    def __div__(self, other):
+        
+        zero = type(self).add_id()
+        if other == zero: return zero
+
+        prim_power_self = type(self).get_log_table_reverse()[self]
+        prim_power_other = -type(self).get_log_table_reverse()[other]
+        prim_power_result = (prim_power_self + prim_power_other) % (type(self).size() - 1)
+
+        return type(self).log_table[prim_power_result]
+
     # Defines equality between two fields
     def __eq__(self, other):
         if isinstance(other, self.__class__):
@@ -403,6 +415,8 @@ def field_tests():
     b8 = F8("x")
     assert a8 * b8 == F8("1")
     assert a8 + b8 == F8("x^2 + x + 1")
+    assert (a8 / b8) * b8 == a8
+    assert b8 * (F8("1") / b8) == F8("1")
 
     a16 = F16("x^3 + 1")
     b16 = F16("x + 1")
