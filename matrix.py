@@ -57,7 +57,12 @@ class Vector(object):
 
     # String representation
     def __unicode__(self):
-        return str(self.list_form)
+        result = "["
+        length = len(self.list_form)
+        for i, v in enumerate(self.list_form):
+            result += unicode(v) + (", " if i != length - 1 else "")
+        result += "]"
+        return result
 
     def __repr__(self):
         return "Vector(" + self.__unicode__() + ")"
@@ -146,7 +151,7 @@ class Matrix(object):
     def __unicode__(self):
         result = "\n"
         for r in xrange(self.height()):
-            result += str(self.get_row(r))
+            result += unicode(self.get_row(r))
             result += "\n"
         return result
 
@@ -166,5 +171,3 @@ def matrix_vector_tests():
     v = Vector([F4("x + 1"), F4("x")])
     scaled_v = v * F4("x")
     assert scaled_v == Vector([F4("1"), F4("x + 1")])
-
-matrix_vector_tests()

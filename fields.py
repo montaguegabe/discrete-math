@@ -217,7 +217,7 @@ class FiniteField(Field):
                 while degree < power - 1:
                     self.coefficients.append(0)
                     degree += 1
-                self.coefficients.append(coef)
+                self.coefficients.append(coef % type(self).characteristic)
                 degree = power
 
     # Adds two field members together
@@ -278,6 +278,12 @@ class FiniteField(Field):
     def __eq__(self, other):
         if isinstance(other, self.__class__):
             return self.coefficients == other.coefficients
+        else:
+            return TypeError("Cannot compare these types")
+
+    def __ne__(self, other):
+        if isinstance(other, self.__class__):
+            return self.coefficients != other.coefficients
         else:
             return TypeError("Cannot compare these types")
 
@@ -455,4 +461,3 @@ def field_tests():
     assert F49("6x") + F49("1") == F49("6x + 1")
 
 
-field_tests()

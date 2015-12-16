@@ -63,34 +63,29 @@ def matrix_to_permutation(matrix, lines):
 
     return permutation
 
+lines_f4 = [
+    Vector([F4("1"), F4("0")]),     # 0
+    Vector([F4("0"), F4("1")]),     # 1
+    Vector([F4("1"), F4("x")]),     # 2
+    Vector([F4("1"), F4("1")]),     # 3
+    Vector([F4("1"), F4("x + 1")])  # 4
+]
+
+lines_f5 = [
+    Vector([F5("1"), F5("0")]), # 0
+    Vector([F5("0"), F5("1")]), # 1
+    Vector([F5("1"), F5("1")]), # 2
+    Vector([F5("1"), F5("2")]), # 3
+    Vector([F5("1"), F5("3")]), # 4
+    Vector([F5("1"), F5("4")])  # 5
+]
 
 def isomorphism_tests():
-
-    lines_f4 = [
-        Vector([F4("1"), F4("0")]),
-        Vector([F4("0"), F4("1")]),
-        Vector([F4("1"), F4("x")]),
-        Vector([F4("1"), F4("1")]),
-        Vector([F4("1"), F4("x + 1")])
-    ]
 
     m_f4 = Matrix.from_list([[F4("1"), F4("x")], [F4("x + 1"), F4("0")]])
     matrix_permutation = matrix_to_permutation(m_f4, lines_f4)
     assert str(matrix_permutation) == "(041)"
 
-    lines_f5 = [
-        Vector([F5("1"), F5("0")]),
-        Vector([F5("0"), F5("1")]),
-        Vector([F5("1"), F5("1")]),
-        Vector([F5("1"), F5("2")]),
-        Vector([F5("1"), F5("3")]),
-        Vector([F5("1"), F5("4")])
-    ]
-
     m_f5 = Matrix.from_list([[F5("1"), F5("3")], [F5("2"), F5("3")]])
     matrix_permutation = matrix_to_permutation(m_f5, lines_f5)
-    print matrix_permutation
-
-
-
-isomorphism_tests()
+    assert str(matrix_permutation) == "(035412)"

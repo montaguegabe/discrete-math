@@ -201,5 +201,4 @@ def permutation_tests():
 
     # ...
 
-
-permutation_tests()        
+     
