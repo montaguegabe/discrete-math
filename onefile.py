@@ -985,9 +985,9 @@ def str_to_class(str):
     return getattr(sys.modules[__name__], str)
 
 print "EXPLORATORY PROBLEMS 2: #5 - FINITE FIELDS"
-while True:
+for i in xrange(1): #while True:
 
-    field_string = raw_input("Enter in a field name e.g. F32, *OR leave empty* to move on to the next question.\n> ")
+    field_string = "F8" #raw_input("Enter in a field name e.g. F32, *OR leave empty* to move on to the next question.\n> ")
     if not field_string: break
 
     # Get class
@@ -1003,8 +1003,8 @@ while True:
     field_member.coefficients = poly
     print "Irreducible polynomial used for the selected field is", unicode(field_member), "."
 
-    a_string = raw_input("\nSpecify first field member in standard polynomial order. Use smallest positive integer for coefficients (e.g. x^2 + 1).\n> a = ")
-    b_string = raw_input("\nSpecify second field member in standard polynomial order. Use smallest positive integer for coefficients (e.g. x^2 + 1).\n> b = ")
+    a_string = "x^2 + 1" #raw_input("\nSpecify first field member in standard polynomial order. Use smallest positive integer for coefficients (e.g. x^2 + 1).\n> a = ")
+    b_string = "x" #raw_input("\nSpecify second field member in standard polynomial order. Use smallest positive integer for coefficients (e.g. x^2 + 1).\n> b = ")
 
     a = cls(a_string)
     b = cls(b_string)
@@ -1020,9 +1020,9 @@ while True:
 
 
 print "EXPLORATORY PROBLEMS 3: #12 - MATRIX ISOMORPHISMS (Finite field matrices)"
-while True:
+for i in xrange(1): #while True:
 
-    field_string = raw_input("Enter in a field name *OR leave empty* to move on to the next question.\n> ")
+    field_string = "F7" #raw_input("Enter in a field name *OR leave empty* to move on to the next question.\n> ")
     if not field_string: break
 
     # Get class
@@ -1037,19 +1037,19 @@ while True:
     ERASE_LINE = '\x1b[2K'
 
     print("\nSpecify first matrix entry by entry, in reading order. Use field-specifying rules from before.")
-    a1_str = raw_input("> a = [[")
-    a2_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", ")
-    a3_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", " + a2_str + "], [")
-    a4_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", ")
+    a1_str = "3" #raw_input("> a = [[")
+    a2_str = "6" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", ")
+    a3_str = "1" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", " + a2_str + "], [")
+    a4_str = "2" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", ")
     print CURSOR_UP_ONE + ERASE_LINE + "> a = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", " + a4_str + "]]\n"
 
     a = Matrix.from_list([[cls(a1_str), cls(a2_str)], [cls(a3_str), cls(a4_str)]])
 
     print("\nSpecify second matrix entry by entry, in reading order. Use field-specifying rules from before.")
-    b1_str = raw_input("> b = [[")
-    b2_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", ")
-    b3_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", " + b2_str + "], [")
-    b4_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", " + b2_str + "], [" + b3_str + ", ")
+    b1_str = "3" #raw_input("> b = [[")
+    b2_str = "0" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", ")
+    b3_str = "1" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", " + b2_str + "], [")
+    b4_str = "5" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", " + b2_str + "], [" + b3_str + ", ")
     print CURSOR_UP_ONE + ERASE_LINE + "> b = [[" + b1_str + ", " + b2_str + "], [" + b3_str + ", " + b4_str + "]]\n"
 
     b = Matrix.from_list([[cls(b1_str), cls(b2_str)], [cls(b3_str), cls(b4_str)]])
@@ -1058,12 +1058,12 @@ while True:
 
 
 print "EXPLORATORY PROBLEMS 3: #12 - MATRIX ISOMORPHISMS (Permutations)"
-while True:
+for i in xrange(1): # while True:
 
-    f_string = raw_input("Enter in a permutation in cycle notation (can be of A6) *OR leave empty* to move on to the next question. I is the identity.\n> f = ")
+    f_string = "(123)(45)" #raw_input("Enter in a permutation in cycle notation (can be of A6) *OR leave empty* to move on to the next question. I is the identity.\n> f = ")
     if not f_string: break
 
-    g_string = raw_input("Enter in another permutation in cycle notation (can be of A6). I is the identity.\n> g = ")
+    g_string = "(124)(35)" #raw_input("Enter in another permutation in cycle notation (can be of A6). I is the identity.\n> g = ")
 
     symbols = map(str, list(range(1, 10)))
     f = Permutation(f_string, symbols)
@@ -1075,8 +1075,8 @@ while True:
 
 
 print "EXPLORATORY PROBLEMS 3: #12 - MATRIX ISOMORPHISMS (Matrix -> Permutation)"
-while True:
-    field_string = raw_input("Enter in a field name: either F4 or F5, *OR leave empty* to move on to the next question.\n> ")
+for i in xrange(1): #while True:
+    field_string = "F4" #raw_input("Enter in a field name: either F4 or F5, *OR leave empty* to move on to the next question.\n> ")
     if not field_string: break
 
     # Get class
@@ -1091,10 +1091,10 @@ while True:
     ERASE_LINE = '\x1b[2K'
 
     print("\nSpecify a *determinant 1* matrix entry by entry, in reading order. Use field-specifying rules from before.")
-    a1_str = raw_input("> m = [[")
-    a2_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", ")
-    a3_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", " + a2_str + "], [")
-    a4_str = raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", ")
+    a1_str = "x" #raw_input("> m = [[")
+    a2_str = "1" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", ")
+    a3_str = "x+1" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", " + a2_str + "], [")
+    a4_str = "0" #raw_input(CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", ")
     print CURSOR_UP_ONE + ERASE_LINE + "> m = [[" + a1_str + ", " + a2_str + "], [" + a3_str + ", " + a4_str + "]]\n"
 
     a1 = cls(a1_str)
@@ -1124,8 +1124,8 @@ while True:
     print ""
 
 print "EXPLORATORY PROBLEMS 3: #12 - MATRIX ISOMORPHISMS (Demonstrate isomorphism)"
-while True:
-    field_string = raw_input("Enter in a field name: either F4 or F5, *OR leave empty* to move on to the next question.\n> ")
+for i in xrange(1): #while True:
+    field_string = "F5" #raw_input("Enter in a field name: either F4 or F5, *OR leave empty* to move on to the next question.\n> ")
     if not field_string: break
 
     # Get class
