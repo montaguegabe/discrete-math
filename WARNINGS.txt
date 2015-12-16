@@ -11,3 +11,15 @@ THIRD BATCH
 (13)(32)(24)=(132)(24)=(1324)
 
 50 total
+
+
+15
+
+
+def firstn(n):
+   3     num = 0
+   4     while num < n:
+   5         yield num
+   6         num += 1
+   7 
+   8 sum_of_first_n = sum(firstn(1000000))
