@@ -1,3 +1,5 @@
+import copy
+
 # The parent class of all fields
 class Field(object):
     def __init__(self):
@@ -214,7 +216,14 @@ class FiniteField(Field):
         result = copy.deepcopy(self)
 
         for power, coef in enumerate(other.coefficients):
-            result[power] = (result[power] + coef) % type(self).characteristic
+            result.coefficients[power] = (result.coefficients[power] + coef) % type(self).characteristic
+
+        # Trim zeros off the end
+        for i in xrange(len(result.coefficients) - 1, 0, -1):
+            if result.coefficients[i] == 0:
+                del result.coefficients[i]
+            else:
+                break
 
         return result
 
@@ -315,10 +324,9 @@ def field_tests():
 
     a = F4("x + 1")
     b = F4("x + 1")
-    print a
-    print b
 
-    print a * b
+    assert a * b == F4("x")
+    assert a + b == F4("0")
     
 
 
